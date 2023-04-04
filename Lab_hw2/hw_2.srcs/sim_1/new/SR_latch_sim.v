@@ -42,15 +42,20 @@ module SR_latch_EN_sim();
     SR_flip_flop uut(S,R,clk,Q,Qn);
     
     initial begin
-        S = 1; R = 0; clk = 0; #125;
-        S = 0; R = 1; #125;
-        S = 0; R = 1; #125;
-        S = 1; R = 0; #125;
-        S = 0; R = 0; #125;
-        S = 1; R = 0; #125;
+        S = 0; R = 1; clk = 1; #25;
+        S = 0; R = 0; #25;
+        S = 1; R = 0; #25;
+        S = 1; R = 0; #25;
+        S = 0; R = 0; #25;
+        S = 0; R = 1; #25;
+        S = 0; R = 0; #25;
+        S = 0; R = 0; #25;
+        S = 1; R = 0; #25;
+        S = 0; R = 0; #25;
+        
     end
     
     always begin
-        clk = ~clk; #125;
+        clk = ~clk; #5;
     end
 endmodule

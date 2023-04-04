@@ -22,6 +22,7 @@ module NAND_gate(input a, input b, output z);
     assign z = ~(a & b);
 endmodule
 
+
 module SR_latch(input S, input R, output Q, output Qn);
     //intermediate wires
     wire S_nand;
@@ -46,13 +47,22 @@ module SR_latch_EN(input S, input R, input EN, output Q, output Qn);
 endmodule
 
 module SR_flip_flop(input S, input R, input clk, output Q, output Qn);
-    //intermediate wires
-    wire S_CLK;
-    wire R_CLK;
+    // intermediate wires
+    wire clk_inv, clk_inv2;
+    wire S_clkinv_nand, R_clkinv_nand;
+    wire Q0, Qn0;
+    wire Q0_clkinv2_nand, Qn0_clkinv2_nand;
     
-    NAND_gate gate1(S, clk, S_CLK);
-    NAND_gate gate2(R, clk, R_CLK);
-    NAND_gate gate3(S_CLK, Qn, Q);
-    NAND_gate gate4(R_CLK, Q, Qn);
- 
+    NAND_gate gate1(clk, clk, clk_inv);
+    NAND_gate gate2(S, clk, S_clkinv_nand);
+    NAND_gate gate3(R, clk, R_clkinv_nand);
+    NAND_gate gate4(S_clkinv_nand, Qn0, Q0);
+    NAND_gate gate5(R_clkinv_nand, Q0, Qn0);
+    
+    NAND_gate gate6(clk_inv, clk_inv, clk_inv2);
+    NAND_gate gate7(Q0, clk_inv2, Q0_clkinv2_nand);
+    NAND_gate gate8(Qn0, clk_inv2, Qn0_clkinv2_nand);
+    NAND_gate gate9(Q0_clkinv2_nand, Qn, Q);
+    NAND_gate gate10(Qn0_clkinv2_nand, Q, Qn);    
+    
 endmodule

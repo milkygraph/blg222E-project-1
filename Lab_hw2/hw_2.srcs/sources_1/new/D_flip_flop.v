@@ -32,7 +32,7 @@ module D_latch(input D, input EN, output Q, output Qn);
     NAND_gate gate4(Dcomp_EN, Q, Qn);
 endmodule
 
-module D_flip_flop(input D, input clk, output reg Q, output reg Qn);
+module D_flip_flop(input D, input clk, output Q, output Qn);
     //intermediate wires 
     wire Q1, Qn1;
     
