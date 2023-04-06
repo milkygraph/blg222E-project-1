@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 03/31/2023 06:41:37 PM
+// Create Date: 04/06/2023 01:43:28 PM
 // Design Name: 
 // Module Name: JK_flip_flop_sim
 // Project Name: 
@@ -20,26 +20,29 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module JK_flip_flop_sim();
-    reg J, K;
-    reg clk;
-    wire Q, Qn;
+module JK_flip_flop_sim(
+    );
+    reg J;
+    reg K;
+    reg clk = 1;
+    wire Q;
+    wire Qn;
     
     JK_flip_flop uut(J,K,clk,Q,Qn);
     
-    initial begin
-        clk = 1'b0; J = 1'b0; K = 1'b1; #100;
-        J = 1'b0; K = 1'b1; #100;
-        J = 1'b0; K = 1'b1; #100;
-        J = 1'b0; K = 1'b0; #100;
-        J = 1'b0; K = 1'b0; #100;
-        J = 1'b1; K = 1'b0; #100;
-        J = 1'b1; K = 1'b0; #100;
-        J = 1'b1; K = 1; #100;
-        J = 1'b1; K = 1'b1; #100;       
+initial begin
+        J = 0; K = 1; #100;
+        J = 1; K = 0; #100;
+        J = 1; K = 1; #100;
+        J = 0; K = 1; #100;
+        J = 1; K = 1; #100;
+        J = 1; K = 0; #100;
+        J = 0; K = 1; #100;
+        J = 1; K = 1; #100;
+        J = 1; K = 0; #100;
+        $stop;
     end
-    
     always begin
-        clk <= ~clk; #20;
+        clk = ~clk; #50;
     end
 endmodule
