@@ -42,8 +42,8 @@ output signed[7:0] outALU, output[3:0] flags);
     
     
     //2's complement addition and subtraction operations 
-     add_sub_8bits add(A,B,1'b0,A_plus_B,add_carry,add_overflow);
-     add_sub_8bits subtract(A,B,1'b1,A_minus_B,sub_carry,sub_overflow);
+     add_sub_8bits add(A, B, 1'b0, flags[1], A_plus_B, add_carry, add_overflow);
+     add_sub_8bits subtract(A, B, 1'b1, 1'b1, A_minus_B,sub_carry, sub_overflow);
     
     //arithmetic shift right
     assign sign = A[7];
@@ -52,7 +52,7 @@ output signed[7:0] outALU, output[3:0] flags);
     assign A_asr[7] = sign;
     
     //circular shift right
-    assign cout = A[0];
+    assign cout = A[0]; //assign flags[1] = A[0]; ??
     assign A_shifted = A >>> 1;
     assign A_circular_shift[6:0] = A_shifted[6:0];
     assign A_circular_shift[7]  = cout;
@@ -73,7 +73,7 @@ output signed[7:0] outALU, output[3:0] flags);
                     (fun_sel == 4'b1100)? A >>> 1 :
                     (fun_sel == 4'b1101)? A << 1 :
                     (fun_sel == 4'b1110)? A_asr : 
-                    (fun_sel == 4'b1111)? A_circular_shift : 8'b00000000;
+                    (fun_sel == 4'b1111)? A_circular_shift : 8'bz;
   
    //Z assignment
    assign flags[0] = (outALU == 8'b00000000)? 1'b1 : 1'b0;
