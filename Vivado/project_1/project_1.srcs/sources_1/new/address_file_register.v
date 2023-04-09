@@ -21,7 +21,7 @@
 
 
 
-module part2c(
+module Address_Register_File(
     input clk,
     input [1:0] FunSel,
     input [3:0] RSel,

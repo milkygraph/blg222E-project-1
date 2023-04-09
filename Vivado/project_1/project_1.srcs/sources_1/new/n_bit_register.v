@@ -95,16 +95,3 @@ module IR_16(
     assign Q = Reg;    
 endmodule
 
-module IR_8(
-    input clk,
-    input EN,
-    input [7:0] I,
-    input [1:0] fun_sel,
-    output [7:0] Q
-    );
-    n_bit_register #(8) second(clk, EN, I, fun_sel, Q);
-    
-endmodule
-
-
-
