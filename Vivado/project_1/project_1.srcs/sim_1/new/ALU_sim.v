@@ -26,15 +26,15 @@ module ALU_sim();
     reg[3:0] fun_sel;
     wire[7:0] ALUout;
     wire[3:0] flags;
-    wire cin;
+    reg cin;
     
-    assign A = 8'b10101101;
+    assign A = 8'b10101100;
     assign B = 8'b01110011;
-    assign cin = 1'b0;
     
     ALU uut(A, B, fun_sel, cin, ALUout, flags);
     
     initial begin
+        cin = 1'b0;
         fun_sel = 4'b0000; #62.5;
         fun_sel = 4'b0001; #62.5;
         fun_sel = 4'b0010; #62.5;

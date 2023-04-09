@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module ALU(input signed [7:0] A, input signed [7:0] B, input[3:0] fun_sel, input cin, 
-output signed[7:0] outALU, output reg[3:0] flags); 
+output signed[7:0] outALU, output reg[3:0] flags = 0); 
     
     //intermediate wires for addition
     wire [7:0] A_plus_B;
@@ -33,14 +33,14 @@ output signed[7:0] outALU, output reg[3:0] flags);
     wire sub_carry;
     
     //2's complement addition and subtraction operations 
-    add_sub_8bits add(A, B, 1'b0, flags[1], A_plus_B, add_carry, add_overflow);
+    add_sub_8bits add(A, B, 1'b0, cin, A_plus_B, add_carry, add_overflow);
     add_sub_8bits subtract(A, B, 1'b1, 1'b1, A_minus_B,sub_carry, sub_overflow);
         
     //intermediate wire for comparison
     wire[7:0] comparison; 
     
     //comparison
-    assign comparison = (A_minus_B[7] == 0)? A : B;
+    assign comparison = (A_minus_B[7] == 0 && flags[3] == 0)? A : B;
     
     //intermediate wires for asr
     wire signed [7:0] A_sr;
@@ -139,7 +139,7 @@ output signed[7:0] outALU, output reg[3:0] flags);
             flags[3] = flags[3];
         end          
     end
-   
+    
 endmodule
 
 module flag_reg(input[3:0] ALU_flags, input clk, output c);

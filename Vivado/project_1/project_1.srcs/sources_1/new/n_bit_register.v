@@ -48,7 +48,7 @@ module n_bit_register
                     Reg <= Reg + 1;
                 end
             endcase
-        end
+        end //else do nothing
     end
     
     assign Q = Reg;
@@ -59,13 +59,40 @@ endmodule
 module IR_16(
     input clk,
     input EN,
-    input [15:0] I,
+    input [7:0] I,
+    input L_H,
     input [1:0] fun_sel,
     output [15:0] Q
     );
-    parameter N = 16;
-    n_bit_register #(16) first(clk, EN, I, fun_sel, Q);
     
+    reg[15:0] Reg;
+    
+    always @(posedge clk) begin
+        if(EN) 
+        begin
+            case(fun_sel)
+                2'b00: begin
+                    Reg <= 0;
+                end
+                2'b01: begin
+                    if(L_H) begin
+                        Reg[7:0] = I;
+                    end
+                    else begin
+                        Reg[15:8] = I;
+                    end
+                end
+                2'b10: begin
+                    Reg <= Reg - 1;
+                end
+                2'b11: begin
+                    Reg <= Reg + 1;
+                end
+            endcase
+        end // else do nothing
+    end
+    
+    assign Q = Reg;    
 endmodule
 
 module IR_8(
