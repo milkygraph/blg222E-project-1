@@ -212,16 +212,6 @@ module Register_File(
             end 
         endcase
     end
-
-    n_bit_register #(8) R1(clk, register_selector[0], I, fun_sel, outputs[0]);
-    n_bit_register #(8) R2(clk, register_selector[1], I, fun_sel, outputs[1]);
-    n_bit_register #(8) R3(clk, register_selector[2], I, fun_sel, outputs[2]);
-    n_bit_register #(8) R4(clk, register_selector[3], I, fun_sel, outputs[3]);
-    n_bit_register #(8) T1(clk, register_selector[4], I, fun_sel, outputs[4]);
-    n_bit_register #(8) T2(clk, register_selector[5], I, fun_sel, outputs[5]);
-    n_bit_register #(8) T3(clk, register_selector[6], I, fun_sel, outputs[6]);
-    n_bit_register #(8) T4(clk, register_selector[7], I, fun_sel, outputs[7]);
-        
     always @(*) begin
         case(T_sel)
             4'b0000: begin
@@ -295,6 +285,15 @@ module Register_File(
         endcase
     end
 
+    n_bit_register #(8) R1(clk, register_selector[0], I, fun_sel, outputs[0]);
+    n_bit_register #(8) R2(clk, register_selector[1], I, fun_sel, outputs[1]);
+    n_bit_register #(8) R3(clk, register_selector[2], I, fun_sel, outputs[2]);
+    n_bit_register #(8) R4(clk, register_selector[3], I, fun_sel, outputs[3]);
+    n_bit_register #(8) T1(clk, register_selector[4], I, fun_sel, outputs[4]);
+    n_bit_register #(8) T2(clk, register_selector[5], I, fun_sel, outputs[5]);
+    n_bit_register #(8) T3(clk, register_selector[6], I, fun_sel, outputs[6]);
+    n_bit_register #(8) T4(clk, register_selector[7], I, fun_sel, outputs[7]);
+        
     always @(*) begin
         case(O1_sel)
             3'b000: begin

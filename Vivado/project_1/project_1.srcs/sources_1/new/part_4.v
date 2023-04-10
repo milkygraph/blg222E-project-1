@@ -48,8 +48,8 @@ module MUX2(
 endmodule
 
 module ALUSystem(
-    input [1:0] RF_OutASel, 
-    input [1:0] RF_OutBSel, 
+    input [2:0] RF_OutASel, 
+    input [2:0] RF_OutBSel, 
     input [1:0] RF_FunSel,
     input [3:0] RF_RSel,
     input [3:0] RF_TSel,
@@ -70,7 +70,6 @@ module ALUSystem(
     );
 
     // output wires
-    wire [7:0 ] A;
     wire [7:0] AOut, BOut; // outputs of RF
     wire ALUcin;
     wire [7:0] ALUOut;
@@ -84,15 +83,16 @@ module ALUSystem(
     wire [7:0] MuxCOut;
 
     MUX4 MUXA(ALUOut, MemoryOut, IROut[7:0], ARF_AOut, MuxASel, MuxAOut);
-    MUX4 MUXB(ALUOut, MemoryOut, IROut[7:0], ARF_AOut, MuxBSel, MuxBOut);
-    MUX2 MUXC(AOut, ARF_AOut, MuxCSel, MuxCOut);
 
-    Register_File RF(Clock, MuxAOut, RF_OutASel, RF_OutBSel, RF_FunSel, RF_RSel, RF_TSel, RF_O1, BOut);
+    Register_File RF(Clock, MuxAOut, RF_OutASel, RF_OutBSel, RF_FunSel, RF_RSel, RF_TSel, AOut, BOut);
     
     ALU _ALU(MuxCOut, BOut, ALU_FunSel, ALUcin, ALUOut, ALUOutFlag);
     flag_reg _flag_reg(ALUOutFlag, Clock, ALUcin);
-
+    
+    MUX4 MUXB(ALUOut, MemoryOut, IROut[7:0], ARF_AOut, MuxBSel, MuxBOut);
     Address_Register_File ARF(Clock, ARF_FunSel, ARF_RSel, ARF_OutASel, ARF_OutBSel, MuxBOut, ARF_AOut, Address);
+    MUX2 MUXC(AOut, ARF_AOut, MuxCSel, MuxCOut);
+
     Memory mem(Address, ALUOut, Mem_WR, Mem_CS, Clock, MemoryOut);
     
     IR_16 _IR(Clock, IR_Enable, MemoryOut, IR_LH, IR_Funsel, IROut);
