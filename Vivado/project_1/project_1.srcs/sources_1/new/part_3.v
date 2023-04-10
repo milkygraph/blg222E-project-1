@@ -18,6 +18,26 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
+module MUX16(input[7:0] I0, input[7:0] I1, input[7:0] I2, input[7:0] I3, input[7:0] I4,
+            input[7:0] I5, input[7:0] I6,input[7:0] I7, input[7:0] I8, input[7:0] I9, input[7:0] I10,
+            input[7:0] I11,input[7:0] I12,input[7:0] I13,input[7:0] I14,input[7:0] I15,
+            input[3:0] sel, output[7:0] O);
+    assign O = (sel == 4'b0000)? I0 : 
+                    (sel == 4'b0001)? I1 :
+                    (sel == 4'b0010)? I2 :
+                    (sel == 4'b0011)? I3:
+                    (sel == 4'b0100)? I4 :
+                    (sel == 4'b0101)? I5 :
+                    (sel == 4'b0110)? I6 : 
+                    (sel == 4'b0111)? I7 :
+                    (sel == 4'b1000)? I8 :
+                    (sel == 4'b1001)? I9 :
+                    (sel == 4'b1010)? I10:
+                    (sel == 4'b1011)? I11:
+                    (sel == 4'b1100)? I12 :
+                    (sel == 4'b1101)? I13 :
+                    (sel == 4'b1110)? I14 : I15; 
+endmodule
 
 module ALU(input signed [7:0] A, input signed [7:0] B, input[3:0] fun_sel, input cin, 
 output signed[7:0] outALU, output reg[3:0] flags = 0); 
@@ -43,11 +63,10 @@ output signed[7:0] outALU, output reg[3:0] flags = 0);
     assign comparison = (A_minus_B[7] == 0 && flags[3] == 0)? A : B;
     
     //intermediate wires for asr
-    wire signed [7:0] A_sr;
-    wire signed [7:0] A_asr;
+    wire[7:0] A_sr, A_asr;
     wire sign;
     
-        //arithmetic shift right
+    //arithmetic shift right
     assign sign = A[7];
     assign A_sr = A >> 1;
     assign A_asr[6:0] = A_sr[6:0];
@@ -64,23 +83,11 @@ output signed[7:0] outALU, output reg[3:0] flags = 0);
     assign A_circular_shift[6:0] = A_shifted[6:0];
     assign A_circular_shift[7]  = csr_cout;
     
-    //MUX to select which arithmetic operation will be outputed 
-    assign outALU = (fun_sel == 4'b0000)? A : 
-                    (fun_sel == 4'b0001)? B :
-                    (fun_sel == 4'b0010)? ~A :
-                    (fun_sel == 4'b0011)? ~B :
-                    (fun_sel == 4'b0100)? A_plus_B :
-                    (fun_sel == 4'b0101)? A_minus_B :
-                    (fun_sel == 4'b0110)? comparison : 
-                    (fun_sel == 4'b0111)? A & B :
-                    (fun_sel == 4'b1000)? A | B :
-                    (fun_sel == 4'b1001)? ~(A & B) :
-                    (fun_sel == 4'b1010)? A ^ B:
-                    (fun_sel == 4'b1011)? A <<< 1:
-                    (fun_sel == 4'b1100)? A >>> 1 :
-                    (fun_sel == 4'b1101)? A << 1 :
-                    (fun_sel == 4'b1110)? A_asr : 
-                    (fun_sel == 4'b1111)? A_circular_shift : 8'bx;
+//    //MUX to select which arithmetic operation will be outputed 
+
+    MUX16 select_op(A, B, ~A, ~B, A_plus_B, A_minus_B, comparison, A & B, A | B, ~(A & B), 
+                     A ^ B, A <<< 1, A >>> 1, A << 1, A_asr, A_circular_shift,
+                     fun_sel, outALU);
   
     always @(*) begin
         //z flag
@@ -151,3 +158,4 @@ module flag_reg(input[3:0] ALU_flags, input clk, output c);
     
     assign c = flags[1];
 endmodule
+
