@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module ALU(input signed [7:0] A, input signed [7:0] B, input[3:0] fun_sel, 
-output signed [7:0] outALU, output reg[3:0] flags = 0); 
+output [7:0] outALU, output reg[3:0] flags = 0); 
     // result of operation
     reg[8:0] result;
     reg counter;
@@ -30,25 +30,27 @@ output signed [7:0] outALU, output reg[3:0] flags = 0);
         //operations
         case(fun_sel)
         4'b0000: begin 
-            result = A;
+            result = A; // A
         end
         4'b0001: begin
-            result = B;
+            result = B; // B
         end
         4'b0010: begin
-            result = ~A;
+            result = ~A; // A's complement
         end
         4'b0011: begin
-            result = ~B;
+            result = ~B;// B's complement
         end
         4'b0100: begin
-            result = A + B + flags[1];
-            flags[1] = result[8];
+            result = A + B + flags[1]; //sum with carry
+            flags[1] = result[8]; // store carry in flag register
+            //Overflow in addition: (neg) + (neg) = (pos) or  (pos) + (pos) = (neg)
             flags[3] = A[7] & B[7] & ~result[7] | ~A[7] & ~B[7] & result[7];
         end 
         4'b0101: begin
             result = A - B;
             flags[1] = result[8];
+            //Overflow in addition: (pos) - (neg) = (neg) or  (neg) - (pos) = (pos)
             flags[3] = ~A[7] & B[7] & result[7] | A[7] & ~B[7] & ~result[7];         
         end
         4'b0110: begin
@@ -57,12 +59,23 @@ output signed [7:0] outALU, output reg[3:0] flags = 0);
             flags[1] = result[8];
             flags[3] = ~A[7] & B[7] & result[7] | A[7] & ~B[7] & ~result[7];   
             
-            //comparison
-            if(result[7] == 0 && flags[3] == 0) begin
-                result = A;
+            //comparison; if A - B is positive and there's no overflow A > B otherwise B > A
+            if(result[7] == 0) begin
+                if(flags[3] == 0) begin
+                    result = A;
+                end
+                else begin
+                    result = B;
+                end
             end 
+            //if A - B is negative and there's no overflow A < B otherwise B < A
             else begin
-                result = B;
+                if(flags[3] == 0) begin
+                    result = B;
+                end
+                else begin
+                    result = A;
+                end
             end
         end
         4'b0111: begin
@@ -78,11 +91,12 @@ output signed [7:0] outALU, output reg[3:0] flags = 0);
             result =  A ^ B;
         end
         4'b1011: begin
-            result = A <<< 1;
+            result = A << 1;
             flags[1] = A[7];
         end
         4'b1100: begin
-            result = A >>> 1;
+            result = A >> 1;
+            result[7] = 0;
             flags[1] = A[0];
         end 
         4'b1101: begin
@@ -90,11 +104,11 @@ output signed [7:0] outALU, output reg[3:0] flags = 0);
             flags[3] = A[7] ^ A[6];
         end
         4'b1110: begin
-            result = A >> 1;
+            result = A >>> 1;
         end
         4'b1111: begin
             flags[1] = A[0];
-            result = A >>> 1;
+            result = A >> 1;
             result[7] = flags[1];
         end
         endcase
