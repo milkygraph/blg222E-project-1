@@ -34,7 +34,7 @@ module address_file_register_sim(
     reg clk = 1;
     
     
-    part2c uut (clk, fun_select, RSel, OutSelA, OutSelB, In, OutA, OutB);
+    Address_Register_File uut (clk, fun_select, RSel, OutSelA, OutSelB, In, OutA, OutB);
     
     initial begin
         fun_select = 2'b00; In = 8'b00011111; RSel = 4'b1111; #100;
