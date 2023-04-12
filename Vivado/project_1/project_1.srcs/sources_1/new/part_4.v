@@ -47,7 +47,7 @@ module MUX2(
 
 endmodule
 
-module ALUSystem(
+module ALU_System(
     input [2:0] RF_OutASel, 
     input [2:0] RF_OutBSel, 
     input [1:0] RF_FunSel,

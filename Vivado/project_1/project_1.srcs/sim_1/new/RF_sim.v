@@ -36,11 +36,15 @@ module RF_sim();
     Register_File uut(clk, In, OutSelA, OutSelB, fun_select, RSel, TSel, OutA, OutB);
     
     initial begin
-        fun_select = 2'b01; In = 8'b00000001; RSel = 4'b1010; TSel = 4'b1010; #200;
-        fun_select = 2'b11; In = 8'b00001111; RSel = 4'b0101; TSel = 4'b1110; #200;
+        fun_select = 2'b00; In = 8'b00011111; RSel = 4'b1111; TSel = 4'b1111; #100;
+        fun_select = 2'b01; In = 8'b00011111; RSel = 4'b0011; TSel = 4'b1100; #100;
+        fun_select = 2'b10; In = 8'b00011111; RSel = 4'b0001; TSel = 4'b0100; #100;
+        fun_select = 2'b11; In = 8'b00011111; RSel = 4'b0001; TSel = 4'b1010; #100;
+        #1000;
+        $finish;
     end
     
     always begin
-        clk = ~clk; #100;
+        clk = ~clk; #50;
     end
 endmodule
