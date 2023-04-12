@@ -1,0 +1,15 @@
+0.7
+2020.2
+Oct 14 2022
+05:20:55
+C:/Users/kenan/Downloads/TestBench.v,1681042006,verilog,,,,Project1Test,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.sim/sim_1/behav/xsim/glbl.v,1665704903,verilog,,,,glbl,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sim_1/new/ALU_sim.v,1681033258,verilog,,,,ALU_sim,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sim_1/new/RF_sim.v,1681050960,verilog,,,,RF_sim,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/Memory.v,1681040738,verilog,,D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/address_file_register.v,,Memory,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/address_file_register.v,1681043502,verilog,,D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/arithmetic.v,,Address_Register_File,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/arithmetic.v,1681035634,verilog,,D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/general_temproal_registers.v,,add_sub_8bits,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/general_temproal_registers.v,1681050625,verilog,,D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/n_bit_register.v,,Register_File,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/n_bit_register.v,1681044215,verilog,,D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sim_1/new/RF_sim.v,,IR_16;n_bit_register,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/part_3.v,1681044259,verilog,,D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/part_4.v,,ALU;flag_reg,,,,,,,,
+D:/Uni/BLG222E/projects/blg222E-project-1/Vivado/project_1/project_1.srcs/sources_1/new/part_4.v,1681047777,verilog,,C:/Users/kenan/Downloads/TestBench.v,,ALUSystem;MUX2;MUX4,,,,,,,,

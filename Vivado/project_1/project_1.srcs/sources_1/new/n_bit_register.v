@@ -65,7 +65,7 @@ module IR_16(
     output [15:0] Q
     );
     
-    reg[15:0] Reg;
+    reg[15:0] Reg = 0;
     
     always @(posedge clk) begin
         if(EN) 
@@ -94,7 +94,3 @@ module IR_16(
     
     assign Q = Reg;    
 endmodule
-
-
-
-
