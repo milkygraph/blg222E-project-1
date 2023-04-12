@@ -94,4 +94,3 @@ module IR_16(
     
     assign Q = Reg;    
 endmodule
-

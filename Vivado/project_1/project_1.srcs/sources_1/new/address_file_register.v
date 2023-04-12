@@ -143,7 +143,7 @@ module Address_Register_File(
     
     
     
-    always@(*)
+    always@(posedge clk)
     begin
         case(OutASel)
             2'b00: OutA = outputs[1];
@@ -152,7 +152,7 @@ module Address_Register_File(
             2'b11: OutA = outputs[0];
         endcase
     end
-    always@(*)
+    always@(posedge clk)
     begin
         case(OutBSel)
             2'b00: OutB = outputs[1];
