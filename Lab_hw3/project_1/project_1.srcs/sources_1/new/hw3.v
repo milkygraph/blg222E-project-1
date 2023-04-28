@@ -18,7 +18,16 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-
+module decoder(input[2:0] select, output[7:0] out);
+    assign out[0] = ~select[2] & ~select[1] & ~select[0];
+    assign out[1] = ~select[2] & ~select[1] & select[0];
+    assign out[2] = ~select[2] & select[1] & ~select[0];
+    assign out[3] = ~select[2] & select[1] & select[0];
+    assign out[4] = select[2] & ~select[1] & ~select[0];
+    assign out[5] = select[2] & ~select[1] & select[0];
+    assign out[6] = select[2] & select[1] & ~select[0];
+    assign out[7] = select[2] & select[1] & select[0];
+endmodule
 
 module tristate_buffer(input[7:0] I, input EN, output[7:0] O);
     //wire[7:0] high_impedence = 8'bz;
@@ -74,26 +83,19 @@ endmodule
 module memory_8B(input[7:0] data, input[2:0] address, input chip_sel, input reset, 
               input read, input write, input clk, output[7:0] out);
     //intermediate wires
-    wire line_sel;
-    //buffers to select a memory line (bus)
-    tristate_buffer buffer1(data, ~address[0] & ~address [1] & ~address[2] & chip_sel, line_sel);
-    tristate_buffer buffer2(data, ~address[0] & ~address [1] & address[2] & chip_sel, line_sel);
-    tristate_buffer buffer3(data, ~address[0] & address [1] & ~address[2] & chip_sel, line_sel);
-    tristate_buffer buffer4(data, ~address[0] & address [1] & address[2] & chip_sel, line_sel);
-    tristate_buffer buffer5(data, address[0] & ~address [1] & ~address[2] & chip_sel, line_sel);
-    tristate_buffer buffer6(data, address[0] & ~address [1] & address[2] & chip_sel, line_sel);
-    tristate_buffer buffer7(data, address[0] & address [1] & ~address[2] & chip_sel, line_sel);
-    tristate_buffer buffer8(data, address[0] & address [1] & address[2] & chip_sel, line_sel);
+    wire[7:0] line_sel;
+    //decoder 
+    decoder decode_address(address, line_sel);
     
     //memory lines
-    memory_line word1(data, reset, line_sel, read, write, clk, out);
-    memory_line word2(data, reset, line_sel, read, write, clk, out);
-    memory_line word3(data, reset, line_sel, read, write, clk, out);
-    memory_line word4(data, reset, line_sel, read, write, clk, out);
-    memory_line word5(data, reset, line_sel, read, write, clk, out);
-    memory_line word6(data, reset, line_sel, read, write, clk, out);
-    memory_line word7(data, reset, line_sel, read, write, clk, out);
-    memory_line word8(data, reset, line_sel, read, write, clk, out);
+    memory_line word1(data, reset, line_sel[0] & chip_sel, read, write, clk, out);
+    memory_line word2(data, reset, line_sel[1] & chip_sel, read, write, clk, out);
+    memory_line word3(data, reset, line_sel[2] & chip_sel, read, write, clk, out);
+    memory_line word4(data, reset, line_sel[3] & chip_sel, read, write, clk, out);
+    memory_line word5(data, reset, line_sel[4] & chip_sel, read, write, clk, out);
+    memory_line word6(data, reset, line_sel[5] & chip_sel, read, write, clk, out);
+    memory_line word7(data, reset, line_sel[6] & chip_sel, read, write, clk, out);
+    memory_line word8(data, reset, line_sel[7] & chip_sel, read, write, clk, out);
 endmodule
 
 module memory_32B(input[7:0] data, input[4:0] address, input reset, 
