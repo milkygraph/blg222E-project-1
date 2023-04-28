@@ -21,21 +21,22 @@
 
 
 module tristate_buffer(input[7:0] I, input EN, output[7:0] O);
-    wire[7:0] high_impedence = 8'bz;
+    //wire[7:0] high_impedence = 8'bz;
     
     /*when EN = 1 (I & 1) = I , (z & 0) = 0, I | 0 = I
     when EN = 0 (I & 0) = 0, (z & 1) = z, 0 | z = z */
     
-    assign O = (I & EN) | (high_impedence & ~EN);
+   // assign O = (I & {8{EN}}) | (high_impedence & ~{8{EN}});
+   assign O = (EN == 1)? I : 8'bz;
     
 endmodule
 
-module bus_8bits(input[7:0] data1, input[7:0]data2, input sel, output out);
+module bus_8bits(input[7:0] data1, input[7:0]data2, input sel, output[7:0] out);
     tristate_buffer buffer1(data1, ~sel, out);
     tristate_buffer buffer2(data2, sel, out);
 endmodule
 
-module past2(input[7:0] data1, input[7:0]data2, input sel, output out1, output out2);
+module part2(input[7:0] data1, input[7:0]data2, input sel, output[7:0] out1, output[7:0] out2);
     //itermediate wires
     wire[7:0] bus_out;
     
@@ -107,21 +108,6 @@ module memory_32B(input[7:0] data, input[4:0] address, input reset,
     memory_8B chip3(data, line_sel, chip_sel[1] & ~chip_sel[0], reset, read, write, clk, out);
     memory_8B chip4(data, line_sel, chip_sel[1] & chip_sel[0], reset, read, write, clk, out);
 endmodule
-
-/*8 Part 6
-In this part, you should implement a 128 byte memory module using 32 byte memory
-module. 128 byte memory module should take 32-bit data as input and give 32-bit data
-as output. Also, this module should take address, reset, read enable, write enable and
-clock inputs. Your module should be able to perform the operations below.
-• At the rising edge of the clock signal, the selected memory line should store the
-data value, which is given as input, if the write enable is high.
-• The module should clear the all stored data in the memory modules at the falling
-edge of the reset signal.
-• If read enable is high, the output of the module should be the stored data of the
-selected memory line.
-Hint: 32 byte memory modules have 8-bit inputs and 8-bit outputs. You can use
-concatenate operation to implement 128 byte memory.
-*/
 
 module memory_128B(input[31:0] data, input[4:0] address, input reset, 
                   input read, input write, input clk, output[31:0] out);
