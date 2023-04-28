@@ -58,7 +58,7 @@ module memory_line(input[7:0] data, input reset, input line_select,
       
       //write operation
       always@(posedge clk) begin
-        data_register = input_data;
+        data_register = (input_data & {8{write}}) | (data_register & {8{~write}});
       end
       
       //clear operation
