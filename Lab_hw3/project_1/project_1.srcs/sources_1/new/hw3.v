@@ -67,7 +67,7 @@ module memory_line(input[7:0] data, input reset, input line_select,
       
       //write operation
       always@(posedge clk) begin
-        data_register = (input_data & {8{write}}) | (data_register & {8{~write}});
+        data_register = (input_data & {8{write & line_select}}) | (data_register & {8{~(write & line_select)}});
       end
       
       //clear operation
@@ -102,8 +102,8 @@ module memory_32B(input[7:0] data, input[4:0] address, input reset,
                   input read, input write, input clk, output[7:0] out);
                   
     //intermediate wires
-    wire[1:0] chip_sel = address[1:0];
-    wire[2:0] line_sel = address[4:2];
+    wire[1:0] chip_sel = address[4:3];
+    wire[2:0] line_sel = address[2:0];
     
     memory_8B chip1(data, line_sel, ~chip_sel[1] & ~chip_sel[0], reset, read, write, clk, out);
     memory_8B chip2(data, line_sel, ~chip_sel[1] & chip_sel[0], reset, read, write, clk, out);
