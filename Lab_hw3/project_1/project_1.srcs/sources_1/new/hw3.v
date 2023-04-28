@@ -70,7 +70,7 @@ module memory_line(input[7:0] data, input reset, input line_select,
                    
 endmodule
 
-module memory(input[7:0] data, input[2:0] address, input chip_sel, input reset, 
+module memory_8B(input[7:0] data, input[2:0] address, input chip_sel, input reset, 
               input read, input write, input clk, output[7:0] out);
     //intermediate wires
     wire line_sel;
@@ -95,24 +95,51 @@ module memory(input[7:0] data, input[2:0] address, input chip_sel, input reset,
     memory_line word8(data, reset, line_sel, read, write, clk, out);
 endmodule
 
-/*In this part, you should implement a 32 byte memory module using 8 byte memory
-module. 32 byte memory module should take 8-bit data as input and give 8-bit data as
-output. Also, this module should take 5-bit address, reset, read enable, write enable, and
-clock inputs. 2 bits of the address input should be used for chip selection and rest of 3
-bits should be used for selecting line. For instance, if the address input is 00111, zeroth
-chip (8-byte memory) and its 7th line (0-indexed) should be selected. Your module
-should be able to perform the operations below.
-• At the rising edge of the clock signal, the selected memory line should store the
-data value, which is given as input, if the write enable is high.
-• The module should clear the all stored data in the memory modules at the falling
-edge of the reset signal.
-4
-• If read enable is high, the output of the module should be the stored data of the
-selected memory line.
-*/
 module memory_32B(input[7:0] data, input[4:0] address, input reset, 
                   input read, input write, input clk, output[7:0] out);
                   
     //intermediate wires
-    wire[2:0] chip_sel = 
+    wire[1:0] chip_sel = address[1:0];
+    wire[2:0] line_sel = address[4:2];
+    
+    memory_8B chip1(data, line_sel, ~chip_sel[1] & ~chip_sel[0], reset, read, write, clk, out);
+    memory_8B chip2(data, line_sel, ~chip_sel[1] & chip_sel[0], reset, read, write, clk, out);
+    memory_8B chip3(data, line_sel, chip_sel[1] & ~chip_sel[0], reset, read, write, clk, out);
+    memory_8B chip4(data, line_sel, chip_sel[1] & chip_sel[0], reset, read, write, clk, out);
+endmodule
+
+/*8 Part 6
+In this part, you should implement a 128 byte memory module using 32 byte memory
+module. 128 byte memory module should take 32-bit data as input and give 32-bit data
+as output. Also, this module should take address, reset, read enable, write enable and
+clock inputs. Your module should be able to perform the operations below.
+• At the rising edge of the clock signal, the selected memory line should store the
+data value, which is given as input, if the write enable is high.
+• The module should clear the all stored data in the memory modules at the falling
+edge of the reset signal.
+• If read enable is high, the output of the module should be the stored data of the
+selected memory line.
+Hint: 32 byte memory modules have 8-bit inputs and 8-bit outputs. You can use
+concatenate operation to implement 128 byte memory.
+*/
+
+module memory_128B(input[31:0] data, input[4:0] address, input reset, 
+                  input read, input write, input clk, output[31:0] out);
+
+    //intermediate wires
+    wire[7:0] input_byte1, input_byte2, input_byte3, input_byte4;
+    wire[7:0] output_byte1, output_byte2, output_byte3, output_byte4;
+    
+    //store each byte of the 32 bits separately
+    assign input_byte1 = data[7:0];
+    assign input_byte2 = data[15:8];
+    assign input_byte3 = data[23:16];
+    assign input_byte4 = data[31:24];
+    
+    memory_32B memory1(input_byte1, address, reset, read, write, clk, output_byte1);
+    memory_32B memory2(input_byte2, address, reset, read, write, clk, output_byte2);
+    memory_32B memory3(input_byte3, address, reset, read, write, clk, output_byte3);
+    memory_32B memory4(input_byte4, address, reset, read, write, clk, output_byte4);
+    
+    assign out = {output_byte4, output_byte3, output_byte2, output_byte1};
 endmodule
