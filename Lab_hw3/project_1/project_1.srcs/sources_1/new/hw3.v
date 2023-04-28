@@ -70,41 +70,49 @@ module memory_line(input[7:0] data, input reset, input line_select,
                    
 endmodule
 
-/*In this part, you should implement an 8 byte memory module using 8-bit memory line
-module. 8 byte memory module should take 8-bit data as input and give 8-bit data as
-output. Also, the module should take 3-bit address, chip select, reset, read enable, write
-enable, and clock inputs for required operations. Required operations are given below.
-• Nth memory line should be selected when the chip select input high. Here, N is
-address number.
-• At the rising edge of the clock signal, the selected memory line should store the
-data, which is given as input, if the write enable input is high.
-• The module should clear all stored data in the memory lines at the falling edge of
-the reset signal.
-• The output of the module should be the data of the selected memory line, if read
-enable input is high.
-Hint: The output of the memory is a bus. Therefore, you do not need to use multiplexer
-in this experiment.*/
-
 module memory(input[7:0] data, input[2:0] address, input chip_sel, input reset, 
               input read, input write, input clk, output[7:0] out);
-
+    //intermediate wires
+    wire line_sel;
     //buffers to select a memory line (bus)
-    tristate_buffer buffer1(data, ~address[0] & ~address [1] & ~address[2], chip_sel);
-    tristate_buffer buffer2(data, ~address[0] & ~address [1] & address[2], chip_sel);
-    tristate_buffer buffer3(data, ~address[0] & address [1] & ~address[2], chip_sel);
-    tristate_buffer buffer4(data, ~address[0] & address [1] & address[2], chip_sel);
-    tristate_buffer buffer5(data, address[0] & ~address [1] & ~address[2], chip_sel);
-    tristate_buffer buffer6(data, address[0] & ~address [1] & address[2], chip_sel);
-    tristate_buffer buffer7(data, address[0] & address [1] & ~address[2], chip_sel);
-    tristate_buffer buffer8(data, address[0] & address [1] & address[2], chip_sel);
+    tristate_buffer buffer1(data, ~address[0] & ~address [1] & ~address[2] & chip_sel, line_sel);
+    tristate_buffer buffer2(data, ~address[0] & ~address [1] & address[2] & chip_sel, line_sel);
+    tristate_buffer buffer3(data, ~address[0] & address [1] & ~address[2] & chip_sel, line_sel);
+    tristate_buffer buffer4(data, ~address[0] & address [1] & address[2] & chip_sel, line_sel);
+    tristate_buffer buffer5(data, address[0] & ~address [1] & ~address[2] & chip_sel, line_sel);
+    tristate_buffer buffer6(data, address[0] & ~address [1] & address[2] & chip_sel, line_sel);
+    tristate_buffer buffer7(data, address[0] & address [1] & ~address[2] & chip_sel, line_sel);
+    tristate_buffer buffer8(data, address[0] & address [1] & address[2] & chip_sel, line_sel);
     
     //memory lines
-    memory_line word1(data, reset, chip_sel, read, write, clk, out);
-    memory_line word2(data, reset, chip_sel, read, write, clk, out);
-    memory_line word3(data, reset, chip_sel, read, write, clk, out);
-    memory_line word4(data, reset, chip_sel, read, write, clk, out);
-    memory_line word5(data, reset, chip_sel, read, write, clk, out);
-    memory_line word6(data, reset, chip_sel, read, write, clk, out);
-    memory_line word7(data, reset, chip_sel, read, write, clk, out);
-    memory_line word8(data, reset, chip_sel, read, write, clk, out);
+    memory_line word1(data, reset, line_sel, read, write, clk, out);
+    memory_line word2(data, reset, line_sel, read, write, clk, out);
+    memory_line word3(data, reset, line_sel, read, write, clk, out);
+    memory_line word4(data, reset, line_sel, read, write, clk, out);
+    memory_line word5(data, reset, line_sel, read, write, clk, out);
+    memory_line word6(data, reset, line_sel, read, write, clk, out);
+    memory_line word7(data, reset, line_sel, read, write, clk, out);
+    memory_line word8(data, reset, line_sel, read, write, clk, out);
+endmodule
+
+/*In this part, you should implement a 32 byte memory module using 8 byte memory
+module. 32 byte memory module should take 8-bit data as input and give 8-bit data as
+output. Also, this module should take 5-bit address, reset, read enable, write enable, and
+clock inputs. 2 bits of the address input should be used for chip selection and rest of 3
+bits should be used for selecting line. For instance, if the address input is 00111, zeroth
+chip (8-byte memory) and its 7th line (0-indexed) should be selected. Your module
+should be able to perform the operations below.
+• At the rising edge of the clock signal, the selected memory line should store the
+data value, which is given as input, if the write enable is high.
+• The module should clear the all stored data in the memory modules at the falling
+edge of the reset signal.
+4
+• If read enable is high, the output of the module should be the stored data of the
+selected memory line.
+*/
+module memory_32B(input[7:0] data, input[4:0] address, input reset, 
+                  input read, input write, input clk, output[7:0] out);
+                  
+    //intermediate wires
+    wire[2:0] chip_sel = 
 endmodule
